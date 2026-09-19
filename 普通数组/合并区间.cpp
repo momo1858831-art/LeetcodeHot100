@@ -3,23 +3,23 @@
 using namespace std;
 class Solution {
 public:
-    void add(vector<int>&count,int L,int R,int x){
-        vector<int>d(count.size());
-        d[0]=count[0];
-        for(int i=1;i<d.size();i++){
-            d[i]=count[i]-count[i-1];
-        }
-        d[L]+=x;
-        if(R+1<d.size()){
-            d[R+1]-=x;
-        }
-        vector<int>pre(d.size());
-        pre[0]=d[0];
-        for(int i=1;i<d.size();i++){
-            pre[i]=pre[i-1]+d[i];
-        }
-        count=pre;
-    }
+    // void add(vector<int>&count,int L,int R,int x){
+    //     vector<int>d(count.size());
+    //     d[0]=count[0];
+    //     for(int i=1;i<d.size();i++){
+    //         d[i]=count[i]-count[i-1];
+    //     }
+    //     d[L]+=x;
+    //     if(R+1<d.size()){
+    //         d[R+1]-=x;
+    //     }
+    //     vector<int>pre(d.size());
+    //     pre[0]=d[0];
+    //     for(int i=1;i<d.size();i++){
+    //         pre[i]=pre[i-1]+d[i];
+    //     }
+    //     count=pre;
+    // }
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
         int maxright=0;
         for(int i=0;i<intervals.size();i++){
@@ -27,12 +27,23 @@ public:
         }
         maxright*=2;
         //cout<<maxright<<endl;
-        vector<int>count(maxright+1,0);
+        vector<int>count(maxright+1);
         int L,R;
+        vector<int>d(maxright+1,0);
         for(int i=0;i<intervals.size();i++){
-            L=intervals[i][0];
-            R=intervals[i][1];
-            add(count,L*2,R*2,1);
+            L=intervals[i][0]*2;
+            R=intervals[i][1]*2;
+            d[L]++;
+            if(R+1<=maxright){
+              d[R+1]--;  
+            }
+            //add(count,L*2,R*2,1);
+        }
+        for(int i=1;i<=maxright;i++){
+            d[i]=d[i-1]+d[i];
+        }
+        for(int i=0;i<=maxright;i++){
+            count[i]=d[i];
         }
         vector<vector<int>>res;
         vector<int>tmp(2);
