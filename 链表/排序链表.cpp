@@ -23,7 +23,7 @@ public:
             return head;
         }
         ListNode *p=head,*q=head->next;
-        while(1){
+        while(true){
             p=p->next;
             q=q->next;
             if(q==tail){
@@ -37,20 +37,19 @@ public:
         ListNode *l=p->next;
         p->next=NULL;
         ListNode *left=mergeSort(head,p);
-        ListNode *right=mergeSort(l,tail);
-        ListNode ll;
-        ListNode *h=&ll;
+        ListNode *right=mergeSort(l,q);
+        ListNode *h=new ListNode();
+        ListNode *hh=h;
         while(left&&right){
             if(left->val<right->val){
                 h->next=left;
-                h=left;
                 left=left->next;
             }
             else{
                 h->next=right;
-                h=right;
                 right=right->next;
             }
+            h=h->next;
         }
         if(left){
             h->next=left;
@@ -58,7 +57,9 @@ public:
         else{
             h->next=right;
         }
-        return ll.next;
+        ListNode *res=hh->next;
+        delete hh;
+        return res;
     }
     ListNode* sortList(ListNode* head) {
         if(!head){
