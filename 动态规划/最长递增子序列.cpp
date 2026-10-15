@@ -3,21 +3,38 @@ using namespace std;
 
 class Solution {
 public:
-    int lengthOfLIS(vector<int>& nums) {
-        int n=nums.size();
-        int dp[n+1];
-        int m=1;
-        for(int i=1;i<=n;i++){
-            dp[i]=1;
-            for(int j=1;j<=i;j++){
-                if(nums[j-1]<nums[i-1]){
-                    dp[i]=max(dp[i],dp[j]+1);
-                }
+    void insert(int x,vector<int>& dp,int n){
+        int left=1,right=n;
+        int mid;
+        while(left<=right){
+            mid=(left+right)/2;
+            if(dp[mid]>x){
+                right=mid-1;
             }
-            if(m<dp[i]){
-                m=dp[i];
+            else if(dp[mid]<x){
+                left=mid+1;
+            }
+            else{
+                return;
             }
         }
-        return m;
+        dp[left]=x;
+    }
+    int lengthOfLIS(vector<int>& nums) {
+        int n=nums.size();
+        vector<int> dp(n+1);
+        dp[1]=nums[0];
+        int len=1;
+        for(int i=2;i<=n;i++){
+            if(nums[i-1]>dp[len]){
+                dp[++len]=nums[i-1];
+                continue;
+            }
+            if(nums[i-1]==dp[len]){
+                continue;
+            }
+            insert(nums[i-1],dp,len);
+        }
+        return len;
     }
 };
