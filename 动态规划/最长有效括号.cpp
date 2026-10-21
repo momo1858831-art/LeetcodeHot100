@@ -8,38 +8,21 @@ public:
             return 0;
         }
         int n=s.length();
-        stack<int>st;
+        vector<int>dp(n,0);
         int res=0;
-        vector<int>v(n,0);
-        for(int i=0;i<n;i++){
+        for(int i=1;i<n;i++){
             if(s[i]=='('){
-                st.push(i);
+                continue;
             }
-            else{
-                if(!st.empty()){
-                    v[i]=v[st.top()]=1;
-                    st.pop();
-                }
+            if(s[i-1]=='('){
+                dp[i]=(i>=2?dp[i-2]:0)+2;
             }
-        }
-        int i=0,j;
-        while(i<n){
-            while(i<n&&!v[i]){
-              i++;  
+            else if((i-dp[i-1]-1)>=0){
+               if(s[i-dp[i-1]-1]=='('){
+                    dp[i]=((i-dp[i-1]-2)>=0?dp[i-dp[i-1]-2]:0)+dp[i-1]+2;
+                } 
             }
-            if(i==n){
-                break;
-            }
-            j=i;
-            i++;
-            while(i<n&&v[i]){
-                i++;
-            }
-            i--;
-            if(res<i-j+1){
-                res=i-j+1;
-            }
-            i++;
+            res=max(res,dp[i]);
         }
         return res;
     }
