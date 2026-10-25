@@ -22,13 +22,15 @@ public:
         if(max>target){
             return false;
         }
-        vector<bool>dp(target+1,0);
+        vector<bool>dp(target+1,false);
         dp[0]=true;
-        for(int i=0;i<n;i++){
-            for(int j=target;j>=nums[i];j--){
-                if(dp[j-nums[i]]){
-                    dp[j]=true;
+        dp[nums[0]]=true;
+        for(int i=1;i<nums.size();i++){
+            for(int j=target;j>=1;j--){
+                if(nums[i]>j){
+                    continue;
                 }
+                dp[j]=dp[j]||dp[j-nums[i]];
             }
         }
         return dp[target];
